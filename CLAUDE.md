@@ -75,7 +75,8 @@ claude-repurpose/
 2. **Content Detection**: Auto-detect YouTube, blog URL, local file, audio, pasted text
 3. **Parallel Execution**: 5 subagents run simultaneously for maximum speed
 4. **Platform-Native**: Never cross-post verbatim; adapt message, tone, format per platform
-5. **/banana Extension**: Optional AI image generation for quote cards, carousel covers, hero images
+5. **/banana Integration**: Image generation is ENFORCED by default when /banana is available — quote cards, carousel covers, hero images generate automatically (no flag needed). Prompts always saved as fallback.
+6. **Mandatory Outputs**: Every run MUST produce `all-content.md` (single consolidated file) and `index.html` (dark-themed viewer with Copy buttons). Run `scripts/generate_html.py` as final step.
 
 ## Ecosystem
 

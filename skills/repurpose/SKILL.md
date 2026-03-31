@@ -181,9 +181,11 @@ If a single platform is requested, spawn only the relevant agent.
 After all agents complete:
 
 1. **Compile all outputs** into the output directory structure (see below)
-2. **Generate a summary table** showing what was produced per platform
-3. **Generate a 7-day publishing calendar** (unless `--brief` was used)
-4. **Report image generation status** (generated via /banana, or prompts-only)
+2. **Generate images** — ALWAYS attempt image generation when /banana is available (do NOT wait for `--images` flag). If /banana is unavailable, save prompts to `quotes/banana-prompts.md` for manual use later
+3. **Generate a summary table** showing what was produced per platform
+4. **Generate a 7-day publishing calendar** (unless `--brief` was used)
+5. **Generate HTML viewer** — Run `python3 scripts/generate_html.py <output-dir>` to create `index.html` (dark-themed viewer with Copy buttons per content piece) and `all-content.md` (single consolidated file with all platform outputs)
+6. **Report to user** — Show summary and link to `index.html` for easy browsing and copying
 
 ### Output Directory Structure
 
@@ -224,12 +226,21 @@ After all agents complete:
     keywords.md
     hashtags.md
     metadata.md
-  images/
-    prompts.md            # Always generated
-    hero.*                # Only if /banana available
-    carousel-cover.*      # Only if /banana available
-    quote-card-*.png      # Only if /banana available
+  quotes/
+    quotes.md             # 5 quotable moments
+    banana-prompts.md     # /banana prompts (always generated)
+  images/                 # Generated images (auto when /banana available)
+    quote-card-*.png
+    carousel-cover.*
+    hero.*
+  seo-metadata.md         # Cross-platform SEO metadata
+  all-content.md          # MANDATORY: Single consolidated markdown (all platforms)
+  index.html              # MANDATORY: HTML viewer with Copy buttons per content piece
+  calendar.md             # 7-day publishing calendar
+  summary.md              # Overview report
 ```
+
+**MANDATORY OUTPUT**: Every `/repurpose` run MUST produce `all-content.md` (single file with everything) and `index.html` (viewer with Copy buttons). Run `python3 scripts/generate_html.py <output-dir>` as the final step.
 
 ## Reference Files
 
@@ -262,19 +273,28 @@ Load these references as needed during the pipeline:
 | `repurpose-seo` | Cross-platform | Keywords, hashtags, metadata |
 | `repurpose-calendar` | Scheduling | 7-day publishing calendar |
 
-## /banana Integration (Image Generation)
+## /banana Integration (Image Generation) — ENFORCED BY DEFAULT
 
-Check if `/banana` (image generation skill) is available:
+Image generation is NOT optional. It is part of the standard pipeline.
 
-1. **If available:** Generate images automatically
-   - Hero image (1600x900 for Twitter, 1080x1080 for LinkedIn/Instagram)
-   - Carousel cover slide (1080x1350)
-   - 3-5 quote card images (1080x1080) with text overlays
-   - Save generated images to `./repurposed/<timestamp>/images/`
-2. **If not available:** Generate detailed image prompts only
-   - Write all prompts to `images/prompts.md`
-   - Include dimensions, style direction, color palette, text overlay instructions
-   - Note in summary: "Image prompts generated. Use /banana or your preferred tool to create visuals."
+**Detection**: Check for `gemini_generate_image` MCP tool OR `~/.claude/skills/banana/SKILL.md`
+
+### When /banana IS available (DEFAULT behavior, no flag needed):
+1. **ALWAYS generate images automatically** as part of the pipeline
+2. Generate ALL of these:
+   - 5 quote card images (1080x1080) from the top 5 quotable moments
+   - 1 carousel cover slide (1080x1350 for Instagram/LinkedIn)
+   - 1 hero image (1600x900 for Twitter, 1080x1080 for social)
+3. Use the 5-Component Formula: Subject → Action → Context → Composition → Style
+4. Save generated images to `./repurposed/<timestamp>/images/`
+5. ALSO save prompts to `quotes/banana-prompts.md` (for reference/regeneration)
+
+### When /banana is NOT available:
+1. Save all prompts to `quotes/banana-prompts.md`
+2. Include full prompt text, aspect ratios, color palette, and platform targets
+3. Note in summary: "Images not generated — /banana not available. Prompts saved to quotes/banana-prompts.md. Run `/banana generate <prompt>` manually, or install /banana: `bash extensions/banana/install.sh`"
+
+**The `--images` flag is DEPRECATED** — images generate automatically when /banana is detected. The flag is kept for backward compatibility but has no effect (images always generate when possible).
 
 **Prompt format for /banana:**
 ```
