@@ -4,8 +4,12 @@ description: >
   Extracts the 5 most quotable moments from content atoms and generates
   /banana image prompts for each using the 5-Component Formula. Produces
   quote cards ready for social sharing with platform-specific aspect ratios,
-  color palettes, and text overlays.
-user-invokable: false
+  color palettes, and text overlays. Sub-skill of the Content Repurposing Engine.
+  Use when user says "quote cards", "quote graphics", "quotable moments",
+  "image prompts", or "repurpose quotes".
+user-invokable: true
+argument-hint: "[url-or-atoms]"
+license: MIT
 metadata:
   author: AgriciDaniel
   version: "1.0.0"

@@ -3,8 +3,12 @@ name: repurpose-reddit
 description: >
   Generates Reddit discussion posts adapted to subreddit culture and norms.
   Produces peer-to-peer, non-promotional content with genuine discussion
-  prompts and subreddit-specific recommendations.
-user-invokable: false
+  prompts and subreddit-specific recommendations. Sub-skill of the Content
+  Repurposing Engine. Use when user says "reddit", "reddit post", "subreddit",
+  "reddit discussion", or "repurpose for reddit".
+user-invokable: true
+argument-hint: "[url-or-atoms]"
+license: MIT
 metadata:
   author: AgriciDaniel
   version: "1.0.0"

@@ -3,8 +3,12 @@ name: repurpose-calendar
 description: >
   Generates a 7-day publishing calendar with staggered posts, optimal timing
   per platform, file references, engagement reminders, and theme-day grouping.
-  Prevents audience fatigue by limiting to 2-3 posts per day.
-user-invokable: false
+  Prevents audience fatigue by limiting to 2-3 posts per day. Sub-skill of the
+  Content Repurposing Engine. Use when user says "publishing calendar",
+  "content calendar", "posting schedule", "7-day calendar", or "repurpose calendar".
+user-invokable: true
+argument-hint: ""
+license: MIT
 metadata:
   author: AgriciDaniel
   version: "1.0.0"

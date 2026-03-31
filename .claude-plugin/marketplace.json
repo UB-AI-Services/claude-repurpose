@@ -1,0 +1,16 @@
+{
+  "name": "claude-repurpose-marketplace",
+  "owner": {
+    "name": "AgriciDaniel"
+  },
+  "metadata": {
+    "description": "Content repurposing tools for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "claude-repurpose",
+      "source": "./",
+      "description": "Content Repurposing Engine for Claude Code. 11 sub-skills covering Twitter/X, LinkedIn, Instagram, Facebook, YouTube Community, Skool, Reddit, Newsletter/Email, quote graphics, SEO metadata, and publishing calendars. Transforms any content into 10+ platform-optimized outputs with brand voice adaptation, poll generation, and AI image generation via /banana."
+    }
+  ]
+}
