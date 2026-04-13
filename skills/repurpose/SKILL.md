@@ -3,12 +3,14 @@ name: repurpose
 description: >
   Content Repurposing Engine. Transforms any content (YouTube videos, blog posts,
   podcasts, local files, pasted text) into platform-optimized outputs for
-  Twitter/X, LinkedIn, Instagram, Facebook, YouTube Community, Skool, Reddit,
-  and email newsletters. Atomizes content into reusable pieces, adapts brand
-  voice per platform, generates polls, image prompts (via /banana), publishing
-  calendars, and SEO metadata. Triggers on: "repurpose", "content repurpose",
-  "turn into social media", "cross-platform", "content atomization", "repurpose
-  blog", "repurpose video", "turn this into posts".
+  Twitter/X, Threads, LinkedIn, Instagram, TikTok, Pinterest, Snapchat, Facebook,
+  YouTube Community, Skool, Discord, Reddit, Quora, Medium, WhatsApp Channels,
+  Telegram, and email newsletters. Atomizes content into reusable pieces, adapts
+  brand voice per platform, generates polls, image prompts (via /banana),
+  publishing calendars, and SEO metadata. Triggers on: "repurpose", "content
+  repurpose", "turn into social media", "cross-platform", "content atomization",
+  "repurpose blog", "repurpose video", "turn this into posts", "threads",
+  "pinterest", "snapchat", "discord", "medium", "whatsapp", "telegram".
 user-invokable: true
 argument-hint: "[url-or-file] [--platforms X,Y] [--voice casual|professional|witty] [--brief] [--images]"
 license: MIT
@@ -20,7 +22,7 @@ metadata:
 
 # Content Repurposing Engine
 
-Transform any content into platform-optimized outputs across 8+ channels.
+Transform any content into platform-optimized outputs across 17+ channels.
 
 ## Quick Reference
 
@@ -111,9 +113,9 @@ Break the extracted content into 5-15 reusable "atoms." Each atom is a self-cont
 
 **Core rule:** The brand voice stays consistent across all platforms. Only the TONE adapts per platform. Load `references/voice-adaptation.md` for the full platform-tone matrix.
 
-## Step 4: Orchestration — Spawn 5 Parallel Agents
+## Step 4: Orchestration — Spawn 6 Parallel Agents
 
-After atomization, spawn 5 subagents in parallel. Each agent receives:
+After atomization, spawn 6 subagents in parallel. Each agent receives:
 - The full list of content atoms (with types and impact ratings)
 - The main argument, target audience, and primary topic
 - The detected or overridden brand voice
@@ -121,39 +123,45 @@ After atomization, spawn 5 subagents in parallel. Each agent receives:
 - The `--images` flag status
 
 ### Agent 1: `repurpose-social`
-**Platforms:** Twitter/X, LinkedIn, Facebook
+**Platforms:** Twitter/X, Threads, LinkedIn, Facebook
 **Receives:** All atoms, voice profile, platform specs
 **Produces:**
 - Twitter: 1 standalone tweet + 1 thread (8-12 tweets) + 1 poll + image prompt
+- Threads: 1 thread (5-10 posts) + 3-5 standalone posts + 1 image post concept
 - LinkedIn: 1 text post + 1 carousel outline (8-10 slides) + 1 poll
 - Facebook: 1 text post + 1 question post + 1 poll
-**Sub-skills invoked:** `repurpose-twitter`, `repurpose-linkedin`, `repurpose-facebook`
+**Sub-skills invoked:** `repurpose-twitter`, `repurpose-threads`, `repurpose-linkedin`, `repurpose-facebook`
 
 ### Agent 2: `repurpose-visual`
-**Platforms:** Instagram, Quote cards, Image prompts
+**Platforms:** Instagram, TikTok, Pinterest, Snapchat, Quote cards, Image prompts
 **Receives:** All atoms (especially quotes, stats, insights), voice profile
 **Produces:**
 - Instagram: 1 carousel (7-10 slides with copy) + 1 reel script (30-60s) + caption + hashtags
+- TikTok: 1 video script (15-60s) + 1 carousel (2-10 slides) + 1 stitch/duet concept
+- Pinterest: 3-5 pin descriptions + 1 idea pin script (5-10 slides) + board suggestions
+- Snapchat: 1 story script (3-5 frames) + 1 Spotlight script (60s) + AR lens concept
 - Quote cards: 3-5 text overlays for image generation
 - Image prompts: hero image + carousel cover + 3 quote card prompts
-**Sub-skills invoked:** `repurpose-instagram`, `repurpose-quotes`
+**Sub-skills invoked:** `repurpose-instagram`, `repurpose-tiktok`, `repurpose-pinterest`, `repurpose-snapchat`, `repurpose-quotes`
 
 ### Agent 3: `repurpose-longform`
-**Platforms:** Newsletter, Email sequence, Reddit
+**Platforms:** Newsletter, Email sequence, Reddit, Quora
 **Receives:** All atoms, full original content reference, voice profile
 **Produces:**
 - Newsletter: subject line + preview text + 200-500 word body
 - Email sequence: 3-email drip (day 0, day 2, day 4) with subject lines and CTAs
 - Reddit: title + post body adapted to subreddit norms
-**Sub-skills invoked:** `repurpose-newsletter`, `repurpose-reddit`
+- Quora: 1 answer (300-1000 words) + 1 Space post + question suggestions
+**Sub-skills invoked:** `repurpose-newsletter`, `repurpose-reddit`, `repurpose-quora`
 
 ### Agent 4: `repurpose-community`
-**Platforms:** YouTube Community, Skool
+**Platforms:** YouTube Community, Skool, Discord
 **Receives:** All atoms (especially questions, polls, insights), voice profile
 **Produces:**
 - YouTube Community: 1 text post + 1 poll (5 options) + 1 image post concept
 - Skool: 1 discussion post + 1 challenge/action post + 1 poll
-**Sub-skills invoked:** `repurpose-youtube`, `repurpose-skool`
+- Discord: 1 announcement post + 1 discussion thread prompt + 1 embed message
+**Sub-skills invoked:** `repurpose-youtube`, `repurpose-skool`, `repurpose-discord`
 
 ### Agent 5: `repurpose-seo`
 **Platforms:** Cross-platform SEO metadata
@@ -166,13 +174,23 @@ After atomization, spawn 5 subagents in parallel. Each agent receives:
 - Schema markup suggestions (Article, VideoObject, FAQPage)
 **Sub-skills invoked:** `repurpose-seo`
 
+### Agent 6: `repurpose-broadcast`
+**Platforms:** WhatsApp Channels, Telegram Channels, Medium
+**Receives:** All atoms, full original content reference, voice profile
+**Produces:**
+- WhatsApp: 1 channel update (100-300 chars) + 1 poll + 1 content teaser
+- Telegram: 1 channel post (500-1000 chars) + 1 deep dive (1000-2000 chars) + 1 poll
+- Medium: 1 article (1500-3000 words) + title/subtitle + 5 tags + publication suggestions
+**Sub-skills invoked:** `repurpose-whatsapp`, `repurpose-telegram`, `repurpose-medium`
+
 ### Platform filtering
 If `--platforms` is specified, only spawn the agents that cover the requested platforms:
-- `twitter`, `linkedin`, `facebook` → Agent 1
-- `instagram`, `quotes`, `images` → Agent 2
-- `newsletter`, `email`, `reddit` → Agent 3
-- `youtube`, `skool` → Agent 4
+- `twitter`, `threads`, `linkedin`, `facebook` → Agent 1
+- `instagram`, `tiktok`, `pinterest`, `snapchat`, `quotes`, `images` → Agent 2
+- `newsletter`, `email`, `reddit`, `quora` → Agent 3
+- `youtube`, `skool`, `discord` → Agent 4
 - `seo` → Agent 5
+- `whatsapp`, `telegram`, `medium` → Agent 6
 
 If a single platform is requested, spawn only the relevant agent.
 
@@ -205,10 +223,22 @@ After all agents complete:
     carousel.md
     reel-script.md
     caption.md
+  threads/
+    thread.md
+    standalone-posts.md
+    image-post.md
   facebook/
     post.md
     question.md
     poll.md
+  pinterest/
+    pins.md
+    idea-pin.md
+    boards.md
+  snapchat/
+    story-script.md
+    spotlight-script.md
+    ar-concept.md
   youtube-community/
     text-post.md
     poll.md
@@ -217,11 +247,35 @@ After all agents complete:
     discussion.md
     challenge.md
     poll.md
+  discord/
+    announcement.md
+    thread-prompt.md
+    embed.md
+  tiktok/
+    video-script.md
+    carousel.md
+    stitch-duet.md
   reddit/
     post.md
+  quora/
+    answer.md
+    space-post.md
+    questions.md
   newsletter/
     newsletter.md
     email-sequence.md
+  medium/
+    article.md
+    tags-publications.md
+    crosspost-note.md
+  whatsapp/
+    update.md
+    poll.md
+    teaser.md
+  telegram/
+    post.md
+    deep-dive.md
+    poll.md
   seo/
     keywords.md
     hashtags.md
@@ -237,7 +291,6 @@ After all agents complete:
   all-content.md          # MANDATORY: Single consolidated markdown (all platforms)
   index.html              # MANDATORY: HTML viewer with Copy buttons per content piece
   calendar.md             # 7-day publishing calendar
-  summary.md              # Overview report
 ```
 
 **MANDATORY OUTPUT**: Every `/repurpose` run MUST produce `all-content.md` (single file with everything) and `index.html` (viewer with Copy buttons). Run `python3 scripts/generate_html.py <output-dir>` as the final step.
@@ -262,12 +315,21 @@ Load these references as needed during the pipeline:
 | Sub-Skill | Platform | Key Output |
 |-----------|----------|------------|
 | `repurpose-twitter` | Twitter/X | Standalone tweet, thread, poll |
+| `repurpose-threads` | Threads | Thread, standalone posts, image post |
 | `repurpose-linkedin` | LinkedIn | Text post, carousel, poll |
 | `repurpose-instagram` | Instagram | Carousel, reel script, caption |
+| `repurpose-tiktok` | TikTok | Video script, carousel, stitch/duet concept |
+| `repurpose-pinterest` | Pinterest | Pin descriptions, idea pin, board suggestions |
+| `repurpose-snapchat` | Snapchat | Story script, Spotlight script, AR concept |
 | `repurpose-facebook` | Facebook | Post, question, poll |
 | `repurpose-youtube` | YouTube Community | Text post, poll, image concept |
 | `repurpose-skool` | Skool | Discussion, challenge, poll |
+| `repurpose-discord` | Discord | Announcement, thread prompt, embed |
 | `repurpose-reddit` | Reddit | Subreddit-adapted post |
+| `repurpose-quora` | Quora | Answer, Space post, question suggestions |
+| `repurpose-medium` | Medium | Article, tags/publications, crosspost note |
+| `repurpose-whatsapp` | WhatsApp | Channel update, poll, teaser |
+| `repurpose-telegram` | Telegram | Channel post, deep dive, poll |
 | `repurpose-newsletter` | Email | Newsletter, 3-email drip |
 | `repurpose-quotes` | Visual | Quote cards, text overlays |
 | `repurpose-seo` | Cross-platform | Keywords, hashtags, metadata |
@@ -383,12 +445,13 @@ User input
 [4] Detect or apply voice profile
     |
     v
-[5] Spawn 5 agents in parallel:
-    |-- repurpose-social (Twitter + LinkedIn + Facebook)
-    |-- repurpose-visual (Instagram + Quotes + Image prompts)
-    |-- repurpose-longform (Newsletter + Email + Reddit)
-    |-- repurpose-community (YouTube Community + Skool)
+[5] Spawn 6 agents in parallel:
+    |-- repurpose-social (Twitter + Threads + LinkedIn + Facebook)
+    |-- repurpose-visual (Instagram + TikTok + Pinterest + Snapchat + Quotes)
+    |-- repurpose-longform (Newsletter + Email + Reddit + Quora)
+    |-- repurpose-community (YouTube Community + Skool + Discord)
     |-- repurpose-seo (Keywords + Hashtags + Metadata)
+    |-- repurpose-broadcast (WhatsApp + Telegram + Medium)
     |
     v
 [6] Collect all outputs → write to ./repurposed/<timestamp>/
